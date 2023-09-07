@@ -19,4 +19,40 @@ public class User {
         return name;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
 }
