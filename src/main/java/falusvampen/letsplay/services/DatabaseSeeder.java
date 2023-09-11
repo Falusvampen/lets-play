@@ -32,15 +32,21 @@ package falusvampen.letsplay.services;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 import falusvampen.letsplay.models.User;
+import falusvampen.letsplay.models.Product;
 import falusvampen.letsplay.repositories.UserRepository;
+import falusvampen.letsplay.repositories.ProductRepository;
 
 @Component
 public class DatabaseSeeder implements CommandLineRunner {
 
     private final UserRepository userRepository;
 
-    public DatabaseSeeder(UserRepository userRepository) {
+    private final ProductRepository productRepository;
+
+    public DatabaseSeeder(UserRepository userRepository, ProductRepository productRepository) {
         this.userRepository = userRepository;
+        this.productRepository = productRepository;
+
     }
 
     @Override
@@ -50,17 +56,25 @@ public class DatabaseSeeder implements CommandLineRunner {
             // If the User collection is empty, seed some initial data
             seedUsers();
         }
+
+        if (productRepository.count() == 0) {
+            // If the Product collection is empty, seed some initial data
+            seedProducts();
+        }
+
     }
 
     private void seedUsers() {
         // You can create and save User objects here
         User user1 = new User();
+        // user1.setId("1");
         user1.setName("John Doe");
         user1.setEmail("johndoe@example.com");
         user1.setPassword("secretpassword");
         user1.setRole("user");
 
         User user2 = new User();
+        // user2.setId("2");
         user2.setName("Alice Smith");
         user2.setEmail("alice@example.com");
         user2.setPassword("password123");
@@ -72,4 +86,25 @@ public class DatabaseSeeder implements CommandLineRunner {
 
         System.out.println("Initial users seeded.");
     }
+
+    private void seedProducts() {
+
+        Product product1 = new Product();
+        product1.setName("Product 1");
+        product1.setPrice(100.0);
+        product1.setDescription("This is product 1");
+
+        Product product2 = new Product();
+
+        product2.setName("Product 2");
+        product2.setPrice(200.0);
+        product2.setDescription("This is product 2");
+
+        productRepository.save(product1);
+        productRepository.save(product2);
+
+        System.out.println("Initial products seeded.");
+
+    }
+
 }
