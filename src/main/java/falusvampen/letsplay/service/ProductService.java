@@ -1,4 +1,4 @@
-package falusvampen.letsplay.services;
+package falusvampen.letsplay.service;
 
 import falusvampen.letsplay.models.Product;
 import falusvampen.letsplay.repositories.ProductRepository;

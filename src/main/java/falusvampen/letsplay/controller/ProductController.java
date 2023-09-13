@@ -1,7 +1,7 @@
 package falusvampen.letsplay.controller;
 
 import falusvampen.letsplay.models.Product;
-import falusvampen.letsplay.services.ProductService;
+import falusvampen.letsplay.service.ProductService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
