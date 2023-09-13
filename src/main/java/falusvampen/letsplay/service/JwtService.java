@@ -32,6 +32,7 @@ public class JwtService {
         SecureRandom random = new SecureRandom();
         byte[] bytes = new byte[32];
         random.nextBytes(bytes);
+        System.out.println("Random token: " + Base64.getEncoder().encodeToString(bytes)); // for audit purpose
         return Base64.getEncoder().encodeToString(bytes);
     }
 
