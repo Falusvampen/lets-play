@@ -1,3 +1,4 @@
+package falusvampen.letsplay.config;
 // package falusvampen.letsplay.security;
 
 // import io.jsonwebtoken.Claims;
