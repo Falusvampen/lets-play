@@ -16,8 +16,8 @@ public class ProductController {
         this.productService = productService;
     }
 
-    // Create a Product
-    @PostMapping
+    // Create a Product at the URL /api/products/create
+    @PostMapping("/create")
     public ResponseEntity<Product> createProduct(@RequestBody Product product) {
         Product createdProduct = productService.createProduct(product);
         return new ResponseEntity<>(createdProduct, HttpStatus.CREATED);
@@ -40,8 +40,8 @@ public class ProductController {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    // Update Product
-    @PutMapping("/{id}")
+    // Update Product by Id at the URL /api/products/update/{id}
+    @PutMapping("/update/{id}")
     public ResponseEntity<Product> updateProduct(@PathVariable String id, @RequestBody Product updatedProduct) {
         Product product = productService.updateProduct(id, updatedProduct);
         if (product != null) {
@@ -50,8 +50,8 @@ public class ProductController {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    // Delete Product
-    @DeleteMapping("/{id}")
+    // Delete Product by Id at the URL /api/products/delete/{id}
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<HttpStatus> deleteProduct(@PathVariable String id) {
         boolean deleted = productService.deleteProduct(id);
         if (deleted) {

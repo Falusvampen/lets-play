@@ -1,5 +1,4 @@
 
-
 package falusvampen.letsplay.security;
 
 import org.springframework.context.annotation.Bean;
@@ -13,10 +12,12 @@ import static org.springframework.security.config.Customizer.withDefaults;
 public class SecurityConfig {
 
         @Bean
-        SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-                http
-                                .httpBasic(withDefaults()) // authentication
-                                .authorizeHttpRequests((authz) -> authz.anyRequest().authenticated()); // authorization
+        SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
+                http.csrf(csrf -> csrf.disable())
+                                .authorizeHttpRequests(
+                                                authorize -> authorize.requestMatchers("/api/products/").permitAll()
+                                                                .requestMatchers("/api/products/{id}").permitAll()
+                                                                .anyRequest().authenticated());
 
                 return http.build();
         }
