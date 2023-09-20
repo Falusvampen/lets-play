@@ -2,6 +2,7 @@ package falusvampen.letsplay.controller;
 
 import java.security.NoSuchAlgorithmException;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,7 +16,14 @@ import falusvampen.letsplay.services.JWTService;
 import falusvampen.letsplay.config.FieldValidator;
 
 public class AuthorizationController {
-    @PostMapping("/users/authenticate")
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private JWTService JWTService;
+
+    @PostMapping("/api/auth")
     public String authenticateAndGetToken(@RequestBody AuthRequest authRequest) throws NoSuchAlgorithmException {
         Optional<User> userOptional = userRepository.findByUser(authRequest.getUsername());
 
