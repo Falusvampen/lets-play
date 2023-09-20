@@ -11,8 +11,8 @@ import java.util.Optional;
 import falusvampen.letsplay.models.AuthRequest;
 import falusvampen.letsplay.models.User;
 import falusvampen.letsplay.repositories.UserRepository;
-import falusvampen.letsplay.services.JwtService;
-import falusvampen.letsplay.utils.FieldValidator;
+import falusvampen.letsplay.services.JWTService;
+import falusvampen.letsplay.config.FieldValidator;
 
 public class AuthorizationController {
     @PostMapping("/users/authenticate")
@@ -35,7 +35,7 @@ public class AuthorizationController {
 
             // Compare the stored salted and hashed password with the newly generated hash
             if (passwordToCheck.equals(storedPassword)) {
-                return jwtService.generateToken(authRequest.getUsername());
+                return JWTService.generateToken(authRequest.getUsername());
             } else {
                 throw new BadCredentialsException("Invalid password");
             }
