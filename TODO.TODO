@@ -1,4 +1,6 @@
-create JWTFilter
+create JWTFilter done
 
-create UserInfoDetailsService
+create UserInfoDetailsService done
+
+create controller for authentication
 
