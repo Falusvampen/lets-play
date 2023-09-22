@@ -2,6 +2,7 @@
 package falusvampen.letsplay.config;
 
 import falusvampen.letsplay.filter.JWTFilter;
+import falusvampen.letsplay.service.UserInfoDetailsService;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -29,7 +30,7 @@ public class SecurityConfig {
         // Then we need to configure the UserDetailsService
         @Bean
         public UserDetailsService userDetailsService() {
-                return new UserDetailsServiceImpl();
+                return new UserInfoDetailsService();
         }
 
         @Bean
