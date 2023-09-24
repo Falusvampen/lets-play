@@ -4,6 +4,7 @@ import falusvampen.letsplay.models.Product;
 import falusvampen.letsplay.service.ProductService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -16,8 +17,9 @@ public class ProductController {
         this.productService = productService;
     }
 
-    // Create a Product at the URL /api/products/create
+    // Create a Product at the URL /api/products
     @PostMapping
+    @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<Product> createProduct(@RequestBody Product product) {
         Product createdProduct = productService.createProduct(product);
         return new ResponseEntity<>(createdProduct, HttpStatus.CREATED);
@@ -40,8 +42,9 @@ public class ProductController {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    // Update Product by Id at the URL /api/products/update/{id}
+    // Update Product by Id at the URL /api/products/{id}
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Product> updateProduct(@PathVariable String id, @RequestBody Product updatedProduct) {
         Product product = productService.updateProduct(id, updatedProduct);
         if (product != null) {
@@ -50,8 +53,9 @@ public class ProductController {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    // Delete Product by Id at the URL /api/products/delete/{id}
+    // Delete Product by Id at the URL /api/products/{id}
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<HttpStatus> deleteProduct(@PathVariable String id) {
         boolean deleted = productService.deleteProduct(id);
         if (deleted) {
