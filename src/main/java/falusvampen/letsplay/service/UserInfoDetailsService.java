@@ -1,7 +1,7 @@
 package falusvampen.letsplay.service;
 
 import falusvampen.letsplay.repositories.UserRepository;
-import falusvampen.letsplay.models.User; // Assuming you have a UserEntity class for your user
+import falusvampen.letsplay.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -22,7 +22,7 @@ public class UserInfoDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<User> userOptional = userRepository.findByName(username); // findByUsername
+        Optional<User> userOptional = userRepository.findByName(username);
         if (userOptional.isEmpty()) {
             throw new UsernameNotFoundException("User not found: " + username);
         }
@@ -30,8 +30,7 @@ public class UserInfoDetailsService implements UserDetailsService {
 
         // Initialize authorities
         List<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority(user.getRole().toString())); // Assuming getRole returns an Enum or
-                                                                                // String
+        authorities.add(new SimpleGrantedAuthority(user.getRole().toString()));
 
         // Return Spring Security User object
         return new org.springframework.security.core.userdetails.User(user.getName(), user.getPassword(),
