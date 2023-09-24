@@ -17,7 +17,7 @@ public class ProductController {
     }
 
     // Create a Product at the URL /api/products/create
-    @PostMapping("/create")
+    @PostMapping
     public ResponseEntity<Product> createProduct(@RequestBody Product product) {
         Product createdProduct = productService.createProduct(product);
         return new ResponseEntity<>(createdProduct, HttpStatus.CREATED);
@@ -41,7 +41,7 @@ public class ProductController {
     }
 
     // Update Product by Id at the URL /api/products/update/{id}
-    @PutMapping("/update/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<Product> updateProduct(@PathVariable String id, @RequestBody Product updatedProduct) {
         Product product = productService.updateProduct(id, updatedProduct);
         if (product != null) {
@@ -51,7 +51,7 @@ public class ProductController {
     }
 
     // Delete Product by Id at the URL /api/products/delete/{id}
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<HttpStatus> deleteProduct(@PathVariable String id) {
         boolean deleted = productService.deleteProduct(id);
         if (deleted) {
