@@ -17,7 +17,7 @@ import java.security.SecureRandom;
 import java.util.Base64;
 
 @Component
-public class JWTService {
+public class JWTsService {
     public static final String SECRET = generateRandomToken();
 
     /**
