@@ -34,6 +34,7 @@ public class ProductService {
             Product existingProduct = optionalProduct.get();
             existingProduct.setName(updatedProduct.getName());
             existingProduct.setPrice(updatedProduct.getPrice());
+            existingProduct.setDescription(updatedProduct.getDescription());
             return productRepository.save(existingProduct);
         }
         return null;
