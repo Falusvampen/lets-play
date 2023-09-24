@@ -4,16 +4,14 @@ import falusvampen.letsplay.models.AuthRequest;
 import falusvampen.letsplay.models.User;
 import falusvampen.letsplay.repositories.UserRepository;
 import falusvampen.letsplay.service.JWTService;
-import falusvampen.letsplay.service.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.web.bind.annotation.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.*;
 
-import java.security.NoSuchAlgorithmException;
 import java.util.Optional;
 
 @RestController
@@ -33,17 +31,27 @@ public class AuthController {
     private PasswordEncoder passwordEncoder;
 
     @PostMapping
-    public String authenticateAndGetToken(@RequestBody AuthRequest authRequest) {
-
-        Optional<User> user = userRepository.findByName(authRequest.getUsername());
-        if (user.isPresent()) {
-            if (passwordEncoder.matches(authRequest.getPassword(), user.get().getPassword())) {
-                return jwtService.generateToken(user.get().getName());
+    public ResponseEntity<?> authenticateAndGetToken(@RequestBody AuthRequest authRequest) {
+        try {
+            // Basic input validation to prevent injection attacks
+            if (authRequest.getUsername() == null || authRequest.getPassword() == null) {
+                return new ResponseEntity<>("Invalid input", HttpStatus.BAD_REQUEST);
             }
-        } else {
-            return "User not found";
-        }
-        return "Wrong password";
-    }
 
+            Optional<User> user = userRepository.findByName(authRequest.getUsername());
+            if (user.isPresent()) {
+                if (passwordEncoder.matches(authRequest.getPassword(), user.get().getPassword())) {
+                    String token = jwtService.generateToken(user.get().getName());
+                    return new ResponseEntity<>(token, HttpStatus.OK);
+                } else {
+                    return new ResponseEntity<>("Wrong password", HttpStatus.UNAUTHORIZED);
+                }
+            } else {
+                return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
+            }
+        } catch (Exception e) {
+            // Generic catch block to ensure no 5XX errors are returned
+            return new ResponseEntity<>("Internal Server Error", HttpStatus.BAD_REQUEST);
+        }
+    }
 }
