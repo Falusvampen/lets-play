@@ -6,6 +6,7 @@ import falusvampen.letsplay.models.User;
 import falusvampen.letsplay.models.Product;
 import falusvampen.letsplay.repositories.UserRepository;
 import falusvampen.letsplay.repositories.ProductRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Component
 public class DatabaseSeeder implements CommandLineRunner {
@@ -14,9 +15,13 @@ public class DatabaseSeeder implements CommandLineRunner {
 
     private final ProductRepository productRepository;
 
-    public DatabaseSeeder(UserRepository userRepository, ProductRepository productRepository) {
+    private final PasswordEncoder passwordEncoder;
+
+    public DatabaseSeeder(UserRepository userRepository, ProductRepository productRepository,
+            PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.productRepository = productRepository;
+        this.passwordEncoder = passwordEncoder;
 
     }
 
@@ -39,17 +44,17 @@ public class DatabaseSeeder implements CommandLineRunner {
         // You can create and save User objects here
         User user1 = new User();
         user1.setId("1");
-        user1.setName("John Doe");
+        user1.setName("JohnDoe");
         user1.setEmail("johndoe@example.com");
-        user1.setPassword("secretpassword");
-        user1.setRole("user");
+        user1.setPassword(passwordEncoder.encode("password123"));
+        user1.setRole("ROLE_USER");
 
         User user2 = new User();
         user2.setId("2");
-        user2.setName("Alice Smith");
-        user2.setEmail("alice@example.com");
-        user2.setPassword("password123");
-        user2.setRole("user");
+        user2.setName("falusvampen");
+        user2.setEmail("falusvampen@example.com");
+        user2.setPassword(passwordEncoder.encode("nice"));
+        user2.setRole("ROLE_ADMIN");
 
         // Save the User objects to the database
         userRepository.save(user1);
