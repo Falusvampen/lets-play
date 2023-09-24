@@ -1,7 +1,7 @@
 package falusvampen.letsplay.controller;
 
 import falusvampen.letsplay.models.User;
-import falusvampen.letsplay.services.UserService;
+import falusvampen.letsplay.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

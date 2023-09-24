@@ -1,7 +1,7 @@
 package falusvampen.letsplay.controller;
 
 import falusvampen.letsplay.models.Product;
-import falusvampen.letsplay.services.ProductService;
+import falusvampen.letsplay.service.ProductService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,7 +16,7 @@ public class ProductController {
         this.productService = productService;
     }
 
-    // Create a Product
+    // Create a Product at the URL /api/products/create
     @PostMapping
     public ResponseEntity<Product> createProduct(@RequestBody Product product) {
         Product createdProduct = productService.createProduct(product);
@@ -40,7 +40,7 @@ public class ProductController {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    // Update Product
+    // Update Product by Id at the URL /api/products/update/{id}
     @PutMapping("/{id}")
     public ResponseEntity<Product> updateProduct(@PathVariable String id, @RequestBody Product updatedProduct) {
         Product product = productService.updateProduct(id, updatedProduct);
@@ -50,7 +50,7 @@ public class ProductController {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    // Delete Product
+    // Delete Product by Id at the URL /api/products/delete/{id}
     @DeleteMapping("/{id}")
     public ResponseEntity<HttpStatus> deleteProduct(@PathVariable String id) {
         boolean deleted = productService.deleteProduct(id);

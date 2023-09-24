@@ -1,33 +1,76 @@
 
 package falusvampen.letsplay.config;
 
+import falusvampen.letsplay.filter.JWTFilter;
+import falusvampen.letsplay.service.UserInfoDetailsService;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.config.http.SessionCreationPolicy;
 
-// import static org.springframework.security.config.Customizer.withDefaults;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @Configuration
+@EnableWebSecurity
+@EnableMethodSecurity
 public class SecurityConfig {
 
-    @Bean
-    SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
-        http.csrf(csrf -> csrf.disable())
-                .authorizeHttpRequests(
-                        authorize -> authorize
-                                .requestMatchers("api/auth/**")
-                                .permitAll()
-                                .requestMatchers(HttpMethod.GET, "/api/products/**")
-                                .permitAll()
-                                .requestMatchers("/error")
-                                .permitAll()
-                                .anyRequest().authenticated());
-        // .sessionManagement(sessionManagement -> sessionManagement
-        // .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+        // First we need to inject out JWTFilter into the SecurityFilterChain
+        @Autowired
+        private JWTFilter jwtFilter;
 
-        return http.build();
-    }
+        // Then we need to configure the UserDetailsService
+        @Bean
+        public UserDetailsService userDetailService() {
+                return new UserInfoDetailsService();
+        }
+
+        @Bean
+        SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+                http.csrf(csrf -> csrf.disable())
+                                .authorizeHttpRequests(
+                                                authorize -> authorize.requestMatchers("/api/products").permitAll()
+                                                                .requestMatchers("/api/products/{id}").permitAll()
+                                                                .requestMatchers("/api/auth").permitAll()
+                                                                // .requestMatchers("/api/users").permitAll()
+                                                                .anyRequest().authenticated())
+                                .authenticationProvider(authenticationProvider())
+                                .sessionManagement(
+                                                sessionManagement -> sessionManagement.sessionCreationPolicy(
+                                                                SessionCreationPolicy.STATELESS))
+                                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+
+                return http.build();
+        }
+
+        @Bean
+        public PasswordEncoder passwordEncoder() {
+                return new BCryptPasswordEncoder();
+        }
+
+        @Bean
+        public AuthenticationProvider authenticationProvider() {
+                DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+                authProvider.setUserDetailsService(userDetailService());
+                authProvider.setPasswordEncoder(passwordEncoder());
+                return authProvider;
+        }
+
+        @Bean
+        public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
+                return config.getAuthenticationManager();
+        }
 
 }

@@ -1,4 +1,4 @@
-package falusvampen.letsplay.services;
+package falusvampen.letsplay.service;
 
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -42,14 +42,14 @@ public class DatabaseSeeder implements CommandLineRunner {
         user1.setName("John Doe");
         user1.setEmail("johndoe@example.com");
         user1.setPassword("secretpassword");
-        user1.setRole("ROLE_USER");
+        user1.setRole("user");
 
         User user2 = new User();
         user2.setId("2");
         user2.setName("Alice Smith");
         user2.setEmail("alice@example.com");
         user2.setPassword("password123");
-        user2.setRole("ROLE_ADMIN");
+        user2.setRole("user");
 
         // Save the User objects to the database
         userRepository.save(user1);
@@ -65,14 +65,12 @@ public class DatabaseSeeder implements CommandLineRunner {
         product1.setName("Product 1");
         product1.setPrice(100.0);
         product1.setDescription("This is product 1");
-        product1.setUserid("1");
 
         Product product2 = new Product();
         product2.setProductid("2");
         product2.setName("Product 2");
         product2.setPrice(200.0);
         product2.setDescription("This is product 2");
-        product2.setUserid("2");
 
         productRepository.save(product1);
         productRepository.save(product2);
