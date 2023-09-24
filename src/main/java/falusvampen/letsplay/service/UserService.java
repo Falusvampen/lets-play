@@ -1,14 +1,14 @@
 package falusvampen.letsplay.service;
 
 import falusvampen.letsplay.models.User;
+import falusvampen.letsplay.models.UserDTO;
 import falusvampen.letsplay.repositories.UserRepository;
-
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.Optional;
 
 @Service
 public class UserService {
@@ -22,6 +22,11 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    // Conversion Method
+    public UserDTO convertToUserDTO(User user) {
+        return new UserDTO(user.getId(), user.getName(), user.getRole());
+    }
+
     // Create User
     public User createUser(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -29,13 +34,15 @@ public class UserService {
     }
 
     // Read All Users
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
+    public List<UserDTO> getAllUsers() {
+        List<User> users = userRepository.findAll();
+        return users.stream().map(this::convertToUserDTO).collect(Collectors.toList());
     }
 
     // Read User by Id
-    public User getUserById(String id) {
-        return userRepository.findById(id).orElse(null);
+    public UserDTO getUserById(String id) {
+        Optional<User> optionalUser = userRepository.findById(id);
+        return optionalUser.map(this::convertToUserDTO).orElse(null);
     }
 
     // Update User
