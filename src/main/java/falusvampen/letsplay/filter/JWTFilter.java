@@ -1,6 +1,6 @@
 package falusvampen.letsplay.filter;
 
-import falusvampen.letsplay.service.JWTsService;
+import falusvampen.letsplay.service.JWTService;
 import falusvampen.letsplay.service.UserInfoDetailsService;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -22,7 +22,7 @@ import java.io.IOException;
 public class JWTFilter extends OncePerRequestFilter {
 
     @Autowired
-    private JWTsService jwtService;
+    private JWTService jwtService;
 
     @Autowired
     private UserInfoDetailsService userInfoDetailsService;

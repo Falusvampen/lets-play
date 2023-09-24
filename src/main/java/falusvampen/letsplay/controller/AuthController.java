@@ -3,7 +3,7 @@ package falusvampen.letsplay.controller;
 import falusvampen.letsplay.models.AuthRequest;
 import falusvampen.letsplay.models.User;
 import falusvampen.letsplay.repositories.UserRepository;
-import falusvampen.letsplay.service.JWTsService;
+import falusvampen.letsplay.service.JWTService;
 import falusvampen.letsplay.service.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +21,7 @@ import java.util.Optional;
 public class AuthController {
 
     @Autowired
-    private JWTsService jwtService;
+    private JWTService jwtService;
 
     @Autowired
     private AuthenticationManager authenticationManager;
