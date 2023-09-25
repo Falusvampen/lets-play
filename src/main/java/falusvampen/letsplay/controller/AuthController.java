@@ -51,7 +51,8 @@ public class AuthController {
             }
         } catch (Exception e) {
             // Generic catch block to ensure no 5XX errors are returned
-            return new ResponseEntity<>("Internal Server Error", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Definitely Not An Internal Server Error, It Is Just A Bad Request",
+                    HttpStatus.BAD_REQUEST);
         }
     }
 }
