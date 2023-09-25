@@ -1,5 +1,6 @@
 package falusvampen.letsplay.controller;
 
+import falusvampen.exceptions.UserCollectionException;
 import falusvampen.letsplay.models.User;
 import falusvampen.letsplay.models.UserDTO;
 import falusvampen.letsplay.service.UserService;
@@ -7,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import javax.validation.Valid;
+import javax.validation.ConstraintViolationException;
 
 import java.util.List;
 
@@ -20,17 +23,24 @@ public class UserController {
         this.userService = userService;
     }
 
-    // Create a User
     @PostMapping
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<User> createUser(@RequestBody User user) {
-        User createdUser = userService.createUser(user);
-        return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
+    public ResponseEntity<?> createUser(@Valid @RequestBody User user) {
+        try {
+            userService.createUser(user);
+            return new ResponseEntity<User>(user, HttpStatus.CREATED); // Changed from OK to CREATED (201)
+        } catch (ConstraintViolationException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY);
+        } catch (UserCollectionException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
+        } catch (Exception e) {
+            return new ResponseEntity<>("An error occurred", HttpStatus.BAD_REQUEST);
+        }
     }
 
     // Read All Users
     @GetMapping
-    @PreAuthorize("hasRole('ROLE_USER')")
+    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     public ResponseEntity<List<UserDTO>> getAllUsers() {
         List<UserDTO> users = userService.getAllUsers();
         return new ResponseEntity<>(users, HttpStatus.OK);
@@ -38,7 +48,7 @@ public class UserController {
 
     // Read User by Id
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('ROLE_USER')")
+    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     public ResponseEntity<UserDTO> getUserById(@PathVariable String id) {
         UserDTO userDTO = userService.getUserById(id);
         if (userDTO != null) {
@@ -51,23 +61,26 @@ public class UserController {
     // Update User
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<User> updateUser(@PathVariable String id, @RequestBody User updatedUser) {
-        User user = userService.updateUser(id, updatedUser);
-        if (user != null) {
-            return new ResponseEntity<>(user, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+    public ResponseEntity<?> updateUserById(@PathVariable("id") String id, @RequestBody User user) {
+        try {
+            userService.updateUser(id, user);
+            return new ResponseEntity<>("Update User with id " + id, HttpStatus.OK);
+        } catch (ConstraintViolationException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
 
     // Delete User
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<HttpStatus> deleteUser(@PathVariable String id) {
-        if (userService.deleteUser(id)) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    public ResponseEntity<?> deleteUserById(@PathVariable("id") String id) {
+        try {
+            userService.deleteUser(id);
+            return new ResponseEntity<>("Successfully deleted user with id " + id, HttpStatus.OK);
+        } catch (UserCollectionException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
 }
