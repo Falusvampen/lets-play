@@ -1,6 +1,6 @@
 package falusvampen.letsplay.config;
 
-import falusvampen.exceptions.UserCollectionException;
+import falusvampen.letsplay.exceptions.UserCollectionException;
 import falusvampen.letsplay.models.User;
 
 import java.util.regex.Matcher;

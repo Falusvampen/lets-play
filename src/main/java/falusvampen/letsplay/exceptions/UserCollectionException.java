@@ -1,4 +1,4 @@
-package falusvampen.exceptions;
+package falusvampen.letsplay.exceptions;
 
 import java.io.Serial;
 

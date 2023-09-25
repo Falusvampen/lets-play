@@ -1,12 +1,12 @@
 package falusvampen.letsplay.service;
 
-import falusvampen.exceptions.UserCollectionException;
 import falusvampen.letsplay.models.Product;
 import falusvampen.letsplay.models.User;
 import falusvampen.letsplay.models.UserDTO;
 import falusvampen.letsplay.repositories.UserRepository;
 import falusvampen.letsplay.repositories.ProductRepository;
 import falusvampen.letsplay.config.ValidateUser;
+import falusvampen.letsplay.exceptions.UserCollectionException;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.List;

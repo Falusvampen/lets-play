@@ -1,17 +1,50 @@
 package falusvampen.letsplay.models;
 
+import java.util.UUID;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
+
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 @Document(collection = "products")
 public class Product {
 
     @Id
     private String id;
+
+    @NotBlank(message = "Product name cannot be empty")
+    // @NotNull(message = "Product name cannot be null")
+    @Field
     private String name;
+
+    @NotBlank(message = "Product description cannot be empty")
+    // @NotNull(message = "Product description cannot be null")
+    @Field
     private String description;
-    private double price;
-    private String userid;
+
+    @NotNull(message = "Product price cannot be null")
+    @DecimalMin(value = "0.0", message = "Product price must be greater than or equal to 0")
+    @Field
+    private Double price;
+
+    @NotBlank(message = "Product userId cannot be empty")
+    // @NotNull(message = "Product price cannot be null")
+    @Field
+    private String userId;
+
+    public void setUserId(String userId) {
+        // Trim the userId before setting it
+        this.userId = userId != null ? userId.trim() : null;
+    }
+
+    public String uuidGenerator() {
+        // Implement logic to generate a unique product ID, e.g., using UUID
+        return UUID.randomUUID().toString();
+    }
 
     // Getters and Setters
 
@@ -36,7 +69,7 @@ public class Product {
     }
 
     public String getUserid() {
-        return userid;
+        return userId;
     }
 
     public void setProductid(String id) {
@@ -48,7 +81,7 @@ public class Product {
     }
 
     public void setUserid(String userid) {
-        this.userid = userid;
+        this.userId = userid;
     }
 
     public void setDescription(String description) {

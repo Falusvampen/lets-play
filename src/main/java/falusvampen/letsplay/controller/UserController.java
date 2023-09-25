@@ -1,6 +1,6 @@
 package falusvampen.letsplay.controller;
 
-import falusvampen.exceptions.UserCollectionException;
+import falusvampen.letsplay.exceptions.UserCollectionException;
 import falusvampen.letsplay.models.User;
 import falusvampen.letsplay.models.UserDTO;
 import falusvampen.letsplay.service.UserService;

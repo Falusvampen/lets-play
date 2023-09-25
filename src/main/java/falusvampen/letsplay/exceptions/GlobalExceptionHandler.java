@@ -1,4 +1,4 @@
-package falusvampen.exceptions;
+package falusvampen.letsplay.exceptions;
 
 import javax.validation.ConstraintViolationException;
 
