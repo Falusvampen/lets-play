@@ -7,6 +7,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import com.mongodb.MongoException;
+
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -19,4 +21,12 @@ public class GlobalExceptionHandler {
     // public ResponseEntity<Object> handleOtherExceptions(Exception e) {
     // return new ResponseEntity<>("An error occurred", HttpStatus.BAD_REQUEST);
     // }
+    @ExceptionHandler(MongoException.class)
+    public ResponseEntity<String> handleMongoException(MongoException e) {
+        // Log the exception for internal tracking.
+        // You can use any logging framework here.
+        System.err.println("MongoDB Error: " + e.getMessage());
+
+        return new ResponseEntity<>("Service temporarily unavailable", HttpStatus.SERVICE_UNAVAILABLE);
+    }
 }
