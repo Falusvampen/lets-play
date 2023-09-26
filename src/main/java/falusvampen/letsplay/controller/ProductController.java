@@ -1,11 +1,14 @@
 package falusvampen.letsplay.controller;
 
+import falusvampen.letsplay.exceptions.ProductCollectionException;
 import falusvampen.letsplay.models.Product;
 import falusvampen.letsplay.service.ProductService;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import javax.validation.ConstraintViolationException;
 
 @RestController
 @RequestMapping("/api/products")
@@ -35,13 +38,16 @@ public class ProductController {
     @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> createProduct(@RequestBody Product product) {
         try {
-            if (product == null || !isValidInput(product.getName())) { // Added validation
-                return new ResponseEntity<>("Invalid input", HttpStatus.BAD_REQUEST);
-            }
-            Product createdProduct = productService.createProduct(product);
-            return new ResponseEntity<>(createdProduct, HttpStatus.CREATED);
+            productService.createProduct(product);
+            return new ResponseEntity<Product>(product, HttpStatus.OK);
+        } catch (ConstraintViolationException e) {
+            System.out.println("ConstraintViolationException " + e.getMessage());
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY);
+        } catch (ProductCollectionException e) {
+            System.out.println("ProductCollectionException " + e.getMessage());
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
         } catch (Exception e) {
-            return new ResponseEntity<>("An error occurred", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -72,37 +78,26 @@ public class ProductController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
-    public ResponseEntity<?> updateProduct(@PathVariable String id, @RequestBody Product updatedProduct) {
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<?> updateProduct(@PathVariable("id") String id, @RequestBody Product product) {
         try {
-            if (updatedProduct == null || !isValidInput(id) || !isValidInput(updatedProduct.getName())) { // Added
-                                                                                                          // validation
-                return new ResponseEntity<>("Invalid input", HttpStatus.BAD_REQUEST);
-            }
-            Product product = productService.updateProduct(id, updatedProduct);
-            if (product != null) {
-                return new ResponseEntity<>(product, HttpStatus.OK);
-            }
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            productService.updateProduct(id, product);
+            return new ResponseEntity<>("Update Product with id " + id, HttpStatus.OK);
+        } catch (ConstraintViolationException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY);
         } catch (Exception e) {
-            return new ResponseEntity<>("An error occurred", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<?> deleteProduct(@PathVariable String id) {
+    public ResponseEntity<?> deleteProduct(@PathVariable("id") String id) {
         try {
-            if (!isValidInput(id)) { // Added validation
-                return new ResponseEntity<>("Invalid input", HttpStatus.BAD_REQUEST);
-            }
-            boolean deleted = productService.deleteProduct(id);
-            if (deleted) {
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-            }
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        } catch (Exception e) {
-            return new ResponseEntity<>("An error occurred", HttpStatus.BAD_REQUEST);
+            productService.deleteProduct(id);
+            return new ResponseEntity<>("Successfully deleted product with id " + id, HttpStatus.OK);
+        } catch (ProductCollectionException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
 }
