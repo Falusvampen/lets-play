@@ -3,6 +3,7 @@ package falusvampen.letsplay.config;
 
 import falusvampen.letsplay.filter.JWTFilter;
 import falusvampen.letsplay.service.UserInfoDetailsService;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -40,11 +41,15 @@ public class SecurityConfig {
         @Bean
         SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
                 http.csrf(csrf -> csrf.disable())
+                                .exceptionHandling(
+                                                exceptionHandling -> exceptionHandling
+                                                                .authenticationEntryPoint((request, response,
+                                                                                authException) -> response
+                                                                                                .sendError(HttpServletResponse.SC_UNAUTHORIZED)))
                                 .authorizeHttpRequests(
                                                 authorize -> authorize.requestMatchers("/api/products").permitAll()
                                                                 .requestMatchers("/api/products/{id}").permitAll()
                                                                 .requestMatchers("/api/auth").permitAll()
-                                                                // .requestMatchers("/api/users").permitAll()
                                                                 .anyRequest().authenticated())
                                 .authenticationProvider(authenticationProvider())
                                 .sessionManagement(
