@@ -17,12 +17,10 @@ public class Product {
     private String id;
 
     @NotBlank(message = "Product name cannot be empty")
-    // @NotNull(message = "Product name cannot be null")
     @Field
     private String name;
 
     @NotBlank(message = "Product description cannot be empty")
-    // @NotNull(message = "Product description cannot be null")
     @Field
     private String description;
 
@@ -32,7 +30,6 @@ public class Product {
     private Double price;
 
     @NotBlank(message = "Product userId cannot be empty")
-    // @NotNull(message = "Product price cannot be null")
     @Field
     private String userId;
 
@@ -64,7 +61,7 @@ public class Product {
         return description;
     }
 
-    public double getPrice() {
+    public Double getPrice() {
         return price;
     }
 
