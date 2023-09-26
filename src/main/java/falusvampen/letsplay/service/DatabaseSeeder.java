@@ -27,21 +27,18 @@ public class DatabaseSeeder implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        // Check if the database is empty (or any other condition that triggers seeding)
         if (userRepository.count() == 0) {
-            // If the User collection is empty, seed some initial data
             seedUsers();
         }
 
         if (productRepository.count() == 0) {
-            // If the Product collection is empty, seed some initial data
             seedProducts();
         }
 
     }
 
     private void seedUsers() {
-        // You can create and save User objects here
+
         User user1 = new User();
         user1.setId("1");
         user1.setName("user");
@@ -56,7 +53,6 @@ public class DatabaseSeeder implements CommandLineRunner {
         user2.setPassword(passwordEncoder.encode("password"));
         user2.setRole("ROLE_ADMIN");
 
-        // Save the User objects to the database
         userRepository.save(user1);
         userRepository.save(user2);
 
