@@ -5,15 +5,22 @@ import java.util.UUID;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 @Data // Generates getters and setters
+@Builder // Generates builder methods
+@NoArgsConstructor // Generates no-arg constructor
+@AllArgsConstructor // Generates all-args constructor
 @Document(collection = "products")
 public class Product {
+    @Builder.Default // Default value for builder
     @Id
     private String id = uuidGenerator(); // Initialize ID upon object creation
 

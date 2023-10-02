@@ -5,6 +5,8 @@ import java.util.UUID;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -12,12 +14,15 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
-@Data  // Generates getters and setters
-@NoArgsConstructor  // Generates no-arg constructor
+@Data // Generates getters and setters
+@Builder // Generates builder methods
+@NoArgsConstructor // Generates no-arg constructor
+@AllArgsConstructor
 @Document(collection = "users")
 public class User {
+    @Builder.Default // Sets the default value for the field
     @Id
-    private String id = uuidGenerator();  // Initialize ID upon object creation
+    private String id = uuidGenerator(); // Initialize ID upon object creation
 
     @NotBlank(message = "User name cannot be empty")
     private String name;
