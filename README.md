@@ -4,9 +4,9 @@
 
 1. [Overview](#-overview)
 2. [Technologies Used](#-technologies-used)
-3. [Running the project](#-Running-the-project)
+3. [Running the project](#-running-the-project)
 
-   3.1 [Start MongoDB Server](#MongoDB-Server)
+   3.1 [Start MongoDB Server](#mongodb-server)
 
    3.2 [Build and Run Project](#build-and-run-project)
 
