@@ -53,10 +53,6 @@ public class Product {
         return name;
     }
 
-    public String getProductid() {
-        return id;
-    }
-
     public String getDescription() {
         return description;
     }
@@ -69,7 +65,7 @@ public class Product {
         return userId;
     }
 
-    public void setProductid(String id) {
+    public void setId(String id) {
         this.id = id;
     }
 

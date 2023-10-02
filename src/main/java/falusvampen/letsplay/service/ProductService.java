@@ -27,7 +27,7 @@ public class ProductService {
     public void createProduct(Product product) throws ConstraintViolationException, ProductCollectionException {
         ValidateProduct.validateProduct(product);
         if (product.getId() != null) {
-            product.setProductid(product.uuidGenerator());
+            product.setId(product.uuidGenerator());
         }
         Optional<User> userOptional = userRepository.findById(product.getUserid().trim());
 
