@@ -54,3 +54,5 @@ To interact with the API, you may utilize either Postman or curl to send API req
 - [**Sagar Yadav**](https://www.github.com/sagarishere) - _Contributor_
 
 ## ☁️ [Endpoints Documentation](https://documenter.getpostman.com/view/28709714/2s9YJc23Pw) 🔗
+
+Note: There are no `@Field` annotations for brevity. They are optional when the field names match.
