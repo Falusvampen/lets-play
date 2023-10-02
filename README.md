@@ -5,8 +5,11 @@
 1. [Overview](#-overview)
 2. [Technologies Used](#-technologies-used)
 3. [Running the project](#-Running-the-project)
-   a) [Start MongoDB Server](#MongoDB-Server)
-   b) [Build and Run Project](#build-and-run-project)
+
+   3.1 [Start MongoDB Server](#MongoDB-Server)
+
+   3.2 [Build and Run Project](#build-and-run-project)
+
 4. [Usage](#-usage)
 5. [Contributors](#-contributors)
 6. [Endpoints 🔗](https://documenter.getpostman.com/view/28709714/2s9YJc23Pw)
