@@ -37,4 +37,8 @@ public class UserCollectionException extends Exception {
         return "Invalid password format!";
     }
 
+    public static String UserNameAlreadyTaken() {
+        return "User name already taken!";
+    }
+
 }

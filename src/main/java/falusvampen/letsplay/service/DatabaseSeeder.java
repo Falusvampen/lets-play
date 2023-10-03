@@ -54,8 +54,17 @@ public class DatabaseSeeder implements CommandLineRunner {
                 .role("ROLE_ADMIN")
                 .build();
 
+        var user3 = User.builder()
+                .id("3")
+                .name("user3")
+                .email("user3@example.com")
+                .password(passwordEncoder.encode("password"))
+                .role("ROLE_USER")
+                .build();
+
         userRepository.save(user1);
         userRepository.save(user2);
+        userRepository.save(user3);
 
         System.out.println("Initial users seeded.");
     }

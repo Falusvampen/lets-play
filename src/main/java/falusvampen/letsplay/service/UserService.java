@@ -1,14 +1,11 @@
 package falusvampen.letsplay.service;
 
-import falusvampen.letsplay.models.Product;
 import falusvampen.letsplay.models.User;
 import falusvampen.letsplay.models.UserDTO;
 import falusvampen.letsplay.repositories.UserRepository;
 import falusvampen.letsplay.repositories.ProductRepository;
-import falusvampen.letsplay.config.ValidateUser;
 import falusvampen.letsplay.exceptions.UserCollectionException;
 
-import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -36,15 +33,29 @@ public class UserService {
     }
 
     // Create User
-    public User createUser(User user)
-            throws ConstraintViolationException, UserCollectionException, NoSuchAlgorithmException {
-        ValidateUser.validateUser(user);
-        Optional<User> userOptional = userRepository.findByName(user.getName());
+    public void createUser(User user)
+            throws ConstraintViolationException, UserCollectionException {
+        Optional<User> userOptional = userRepository.findByEmail(user.getEmail().trim());
         if (userOptional.isPresent()) {
             throw new UserCollectionException(UserCollectionException.UserAlreadyExistException());
         }
+        // make sure username is unique
+        Optional<User> userOptional1 = userRepository.findByName(user.getName().trim());
+        if (userOptional1.isPresent()) {
+            throw new UserCollectionException(UserCollectionException.UserNameAlreadyTaken());
+        }
+
+        // set id to new uuid
+        while (true) {
+            user.setId(User.uuidGenerator());
+            Optional<User> userOptional2 = userRepository.findById(user.getId().trim());
+            if (userOptional2.isEmpty()) {
+                break;
+            }
+        }
+        user.setName(user.getName().trim());
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        return userRepository.save(user);
+        userRepository.save(user);
     }
 
     // Read All Users
@@ -53,28 +64,25 @@ public class UserService {
         return users.stream().map(this::convertToUserDTO).collect(Collectors.toList());
     }
 
-    // Read User by Id
     public UserDTO getUserById(String id) {
         Optional<User> optionalUser = userRepository.findById(id);
         return optionalUser.map(this::convertToUserDTO).orElse(null);
     }
 
     // Update User
-    public User updateUser(String id, User updatedUser)
-            throws ConstraintViolationException, UserCollectionException, NoSuchAlgorithmException {
-        ValidateUser.validateUser(updatedUser);
+    public void updateUser(String id, User updatedUser)
+            throws ConstraintViolationException, UserCollectionException {
         Optional<User> userOptional = userRepository.findById(id);
         if (userOptional.isEmpty()) {
             throw new UserCollectionException(UserCollectionException.NotFoundException(id));
         }
-        updatedUser.setId(id);
-        updatedUser.setName(updatedUser.getName());
+        updatedUser.setId(id.trim());
+        updatedUser.setName(updatedUser.getName().trim());
         updatedUser.setPassword(passwordEncoder.encode(updatedUser.getPassword()));
-        updatedUser.setRole(updatedUser.getRole());
-        updatedUser.setEmail(updatedUser.getEmail());
+        updatedUser.setRole(updatedUser.getRole().trim());
+        updatedUser.setEmail(updatedUser.getEmail().trim());
 
-        return userRepository.save(updatedUser);
-
+        userRepository.save(updatedUser);
     }
 
     // Delete User
@@ -82,19 +90,11 @@ public class UserService {
         Optional<User> userOptional = userRepository.findById(id);
         System.out.println("userOptional: " + userOptional);
 
-        if (!userOptional.isPresent()) {
+        if (userOptional.isEmpty()) {
             throw new UserCollectionException(UserCollectionException.NotFoundException(id));
         } else {
-            // Find all products associated with the user and delete them
-            List<Product> productsToDelete = productRepository.findByUserId(id);
-            System.out.println("Products to delete: " + productsToDelete);
-            for (Product product : productsToDelete) {
-                productRepository.delete(product);
-            }
-
-            // Now delete the user
+            productRepository.deleteAllByUserId(id);
             userRepository.deleteById(id);
-
         }
     }
 }

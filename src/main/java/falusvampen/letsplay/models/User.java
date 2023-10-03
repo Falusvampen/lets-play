@@ -37,7 +37,7 @@ public class User {
     @NotNull(message = "User role cannot be null")
     private String role;
 
-    private static String uuidGenerator() {
+    public static String uuidGenerator() {
         return UUID.randomUUID().toString();
     }
 }

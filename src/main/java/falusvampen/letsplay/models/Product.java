@@ -39,8 +39,7 @@ public class Product {
 
     // Manually define the setter for userId
     public void setUserId(String userId) {
-        // Trim the userId before setting it
-        this.userId = userId != null ? userId.trim() : null;
+        this.userId = userId.trim();
     }
 
     public static String uuidGenerator() {

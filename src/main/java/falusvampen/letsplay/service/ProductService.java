@@ -5,7 +5,6 @@ import falusvampen.letsplay.models.Product;
 import falusvampen.letsplay.repositories.ProductRepository;
 import falusvampen.letsplay.repositories.UserRepository;
 import falusvampen.letsplay.models.User;
-import falusvampen.letsplay.config.ValidateProduct;
 import org.springframework.stereotype.Service;
 
 import javax.validation.ConstraintViolationException;
@@ -25,7 +24,6 @@ public class ProductService {
     }
 
     public void createProduct(Product product) throws ConstraintViolationException, ProductCollectionException {
-        ValidateProduct.validateProduct(product);
         if (product.getId() != null) {
             product.setId(Product.uuidGenerator());
         }
@@ -47,9 +45,8 @@ public class ProductService {
     }
 
     public void updateProduct(String id, Product product) throws ProductCollectionException {
-        Optional<Product> productOptional = productRepository.findById(id);
 
-        ValidateProduct.validateProduct(product);
+        Optional<Product> productOptional = productRepository.findById(id);
 
         Optional<User> userOptional = userRepository.findById(product.getUserId().trim());
 

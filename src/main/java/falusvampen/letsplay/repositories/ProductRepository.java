@@ -14,4 +14,6 @@ public interface ProductRepository extends MongoRepository<Product, String> {
 
     @Query("{'userId': ?0}")
     List<Product> findByUserId(String userId);
+
+    List<Product> deleteAllByUserId(String id);
 }

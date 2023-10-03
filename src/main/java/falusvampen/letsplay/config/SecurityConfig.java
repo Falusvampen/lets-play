@@ -14,6 +14,7 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -34,13 +35,38 @@ public class SecurityConfig {
 
         // Then we need to configure the UserDetailsService
         @Bean
-        public UserDetailsService userDetailService() {
+        UserDetailsService userDetailService() {
                 return new UserInfoDetailsService();
         }
 
+        /**
+         * <pre>
+         *                  +---------------------+       +---------------------+       +---------------------+
+         *                  |                     |       |                     |       |                     |
+         *                  |   HttpSecurity      |------>|  SecurityFilterChain|------>| AuthenticationManager|
+         *                  |                     |       |                     |       |                     |
+         *                  +---------------------+       +---------------------+       +---------------------+
+         *                          |                           |                             |
+         *                          |                           |                             |
+         *                          |                           |                             |
+         *                  +-------v-----------------+         |                     +-------v-----------------+
+         *                  |                         |         |                     |                         |
+         *                  |   JWTFilter             |         |                     | AuthenticationProvider  |
+         *                  |                         |         |                     |                         |
+         *                  +-------------------------+         |                     +-------------------------+
+         *                                                      |
+         *                                                      |
+         *                                              +-------v-----------------+
+         *                                              |                         |
+         *                                              |  UserDetailsService    |
+         *                                              |                         |
+         *                                              +-------------------------+
+         * </pre>
+         */
+
         @Bean
         SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-                http.csrf(csrf -> csrf.disable())
+                return http.csrf(AbstractHttpConfigurer::disable)
                                 .exceptionHandling(
                                                 exceptionHandling -> exceptionHandling
                                                                 .authenticationEntryPoint((request, response,
@@ -55,18 +81,17 @@ public class SecurityConfig {
                                 .sessionManagement(
                                                 sessionManagement -> sessionManagement.sessionCreationPolicy(
                                                                 SessionCreationPolicy.STATELESS))
-                                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
-
-                return http.build();
+                                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
+                                .build();
         }
 
         @Bean
-        public PasswordEncoder passwordEncoder() {
+        PasswordEncoder passwordEncoder() {
                 return new BCryptPasswordEncoder();
         }
 
         @Bean
-        public AuthenticationProvider authenticationProvider() {
+        AuthenticationProvider authenticationProvider() {
                 DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
                 authProvider.setUserDetailsService(userDetailService());
                 authProvider.setPasswordEncoder(passwordEncoder());
@@ -74,7 +99,7 @@ public class SecurityConfig {
         }
 
         @Bean
-        public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
+        AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
                 return config.getAuthenticationManager();
         }
 

@@ -28,7 +28,7 @@ public class UserController {
     public ResponseEntity<?> createUser(@Valid @RequestBody User user) {
         try {
             userService.createUser(user);
-            return new ResponseEntity<User>(user, HttpStatus.CREATED); // Changed from OK to CREATED (201)
+            return new ResponseEntity<>(user, HttpStatus.CREATED); // Changed from OK to CREATED (201)
         } catch (ConstraintViolationException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY);
         } catch (UserCollectionException e) {
@@ -46,7 +46,6 @@ public class UserController {
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
-    // Read User by Id
     @GetMapping("/{id}")
     @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     public ResponseEntity<UserDTO> getUserById(@PathVariable String id) {
