@@ -38,20 +38,21 @@ public class DatabaseSeeder implements CommandLineRunner {
     }
 
     private void seedUsers() {
+        var user1 = User.builder()
+                .id("1")
+                .name("user")
+                .email("user@example.com")
+                .password(passwordEncoder.encode("password"))
+                .role("ROLE_USER")
+                .build();
 
-        User user1 = new User();
-        user1.setId("1");
-        user1.setName("user");
-        user1.setEmail("user@example.com");
-        user1.setPassword(passwordEncoder.encode("password"));
-        user1.setRole("ROLE_USER");
-
-        User user2 = new User();
-        user2.setId("2");
-        user2.setName("admin");
-        user2.setEmail("admin@example.com");
-        user2.setPassword(passwordEncoder.encode("password"));
-        user2.setRole("ROLE_ADMIN");
+        var user2 = User.builder()
+                .id("2")
+                .name("admin")
+                .email("admin@example.com")
+                .password(passwordEncoder.encode("password"))
+                .role("ROLE_ADMIN")
+                .build();
 
         userRepository.save(user1);
         userRepository.save(user2);
@@ -61,19 +62,21 @@ public class DatabaseSeeder implements CommandLineRunner {
 
     private void seedProducts() {
 
-        Product product1 = new Product();
-        product1.setProductid("1");
-        product1.setName("Product 1");
-        product1.setPrice(100.0);
-        product1.setDescription("This is product 1");
-        product1.setUserid("1");
+        var product1 = Product.builder()
+                .id("1")
+                .name("Product 1")
+                .price(100.0)
+                .description("This is product 1")
+                .userId("1")
+                .build();
 
-        Product product2 = new Product();
-        product2.setProductid("2");
-        product2.setName("Product 2");
-        product2.setPrice(200.0);
-        product2.setDescription("This is product 2");
-        product2.setUserid("2");
+        var product2 = Product.builder()
+                .id("2")
+                .name("Product 2")
+                .price(200.0)
+                .description("This is product 2")
+                .userId("2")
+                .build();
 
         productRepository.save(product1);
         productRepository.save(product2);

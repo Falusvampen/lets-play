@@ -27,9 +27,9 @@ public class ProductService {
     public void createProduct(Product product) throws ConstraintViolationException, ProductCollectionException {
         ValidateProduct.validateProduct(product);
         if (product.getId() != null) {
-            product.setProductid(product.uuidGenerator());
+            product.setId(Product.uuidGenerator());
         }
-        Optional<User> userOptional = userRepository.findById(product.getUserid().trim());
+        Optional<User> userOptional = userRepository.findById(product.getUserId().trim());
 
         if (userOptional.isEmpty()) {
             throw new ProductCollectionException(ProductCollectionException.UserNotFoundException());
@@ -51,13 +51,13 @@ public class ProductService {
 
         ValidateProduct.validateProduct(product);
 
-        Optional<User> userOptional = userRepository.findById(product.getUserid().trim());
+        Optional<User> userOptional = userRepository.findById(product.getUserId().trim());
 
         if (productOptional.isPresent()) {
             if (productOptional.get().getName().equals(product.getName()) &&
                     productOptional.get().getDescription().equals(product.getDescription()) &&
                     productOptional.get().getPrice().equals(product.getPrice()) &&
-                    productOptional.get().getUserid().equals(product.getUserid())) {
+                    productOptional.get().getUserId().equals(product.getUserId())) {
                 throw new ProductCollectionException(ProductCollectionException.NoChangesMadeException());
             } else if (userOptional.isEmpty()) {
                 throw new ProductCollectionException(ProductCollectionException.UserNotFoundException());
@@ -66,7 +66,7 @@ public class ProductService {
             productUpdate.setName(product.getName());
             productUpdate.setDescription(product.getDescription());
             productUpdate.setPrice(product.getPrice());
-            productUpdate.setUserId(product.getUserid());
+            productUpdate.setUserId(product.getUserId());
             productRepository.save(productUpdate);
         } else {
             throw new ProductCollectionException(ProductCollectionException.NotFoundException(id));
