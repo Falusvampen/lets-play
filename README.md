@@ -13,6 +13,8 @@
 4. [Usage](#-usage)
 5. [Contributors](#-contributors)
 6. [Endpoints 🔗](https://documenter.getpostman.com/view/28709714/2s9YJc23Pw)
+7. [Graceful Shutdown](#the-application-supports-graceful-shutdown)
+8. [Notes](#-notes)
 
 ## 📌 Overview
 
@@ -55,4 +57,23 @@ To interact with the API, you may utilize either Postman or curl to send API req
 
 ## ☁️ [Endpoints Documentation](https://documenter.getpostman.com/view/28709714/2s9YJc23Pw) 🔗
 
-Note: There are no `@Field` annotations for brevity. They are optional when the field names match.
+## 【﻿⏻】 Graceful Shutdown 【﻿⏻】
+
+#### The application supports graceful shutdown.
+To gracefully shut down the application, send a `POST` request to the `/actuator/shutdown` endpoint.
+
+Or, if you prefer `curl`:
+
+```bash
+curl -X POST http://localhost:8080/actuator/shutdown
+```
+
+Follow it by docker-compose down to stop the MongoDB server.
+
+```bash
+docker-compose down
+```
+
+## 📝 Notes
+
+- There are no `@Field` annotations for brevity. They are optional when the field names match.

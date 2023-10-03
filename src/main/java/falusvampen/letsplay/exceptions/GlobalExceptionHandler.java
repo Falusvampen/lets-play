@@ -17,10 +17,6 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY);
     }
 
-    // @ExceptionHandler(value = { Exception.class })
-    // public ResponseEntity<Object> handleOtherExceptions(Exception e) {
-    // return new ResponseEntity<>("An error occurred", HttpStatus.BAD_REQUEST);
-    // }
     @ExceptionHandler(MongoException.class)
     public ResponseEntity<String> handleMongoException(MongoException e) {
         // Log the exception for internal tracking.
